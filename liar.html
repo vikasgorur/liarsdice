@@ -1,0 +1,108 @@
+<html>
+  <head>
+  <title>Liar's Dice</title>
+
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+
+  <style>
+  body {
+    background-color: #999999;
+  }
+
+  .content {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10em;
+    width: 30%;
+  }
+
+  input {
+    border-radius: 10px;
+    width: 10%;
+
+    font-size: 150%;
+    text-align: right;
+  }
+
+  .question {
+    font-family: sans-serif;
+    font-size: 300%;
+  }
+
+  .form-text {
+    font-family: sans-serif;
+    font-size: 150%;
+  }
+
+  .answer {
+    font-family: serif;
+    font-size: 300%;
+  }
+
+  </style>
+
+  <script type="text/javascript">
+    $(document).ready(function (){
+      $("#new_num").focus();
+
+      $("#new_num").keypress(function () {
+        $("#new_rank").focus();
+      })
+
+      $("#new_rank").keypress(function () {
+        $("#old_num").focus();
+      })
+
+      $("#old_num").keypress(function () {
+        $("#old_rank").focus();
+      })
+
+      $("#old_rank").keypress(updateValidity);
+    })
+
+    function updateValidity(){
+      var valid = isValidBid($("#new_num").val(), $("#new_rank").val(), 
+                             $("#old_num").val(), $("#old_rank").val());
+
+      if (valid) {
+        $(".answer").html("YES!")
+      } else {
+        $(".answer").html("NO!")
+      }
+    }
+
+    function isValidBid(new_num, new_rank, old_num, old_rank) {
+      if (new_num > Math.max(old_num, old_rank) ||
+          new_rank > Math.max(old_num, old_rank)) {
+        return true;
+      } else {
+        return false
+      }
+    }
+  </script>
+
+  </head>
+
+  <body>
+    <div class="content">
+      <div class="question">Can I bid</div>
+      
+      <form>
+        <input type="text" id="new_num"/>
+        <input type="text" id="new_rank"/>&nbsp;<span class="form-text">s</span>
+      </form>
+      
+      <div class="question">after</div>
+
+      <form>
+        <input type="text" id="old_num"/>
+        <input type="text" id="old_rank"/>&nbsp;<span class="form-text">s ?</span>
+      </form>
+
+      <div class="answer"></div>
+
+      <p>
+      Rule: <a href="http://en.wikipedia.org/wiki/Liar%27s_dice#Bidding_rules">"Pirates of the Carribean"</a>
+    </div>
+  </body>
+</html
