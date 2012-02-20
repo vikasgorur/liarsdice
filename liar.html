@@ -39,6 +39,10 @@
     font-size: 300%;
   }
 
+  .selected {
+    background-color: #ffffff;
+  }
+
   </style>
 
   <script type="text/javascript">
@@ -58,11 +62,22 @@
       })
 
       $("#old_rank").keypress(updateValidity);
+
+      $("#pirates").click(function (event) {
+        event.preventDefault();
+        selectRule('#pirates')
+      })
+
+      $("#blurb").click(function (event) {
+        event.preventDefault();
+        selectRule('#blurb')
+      })
+
     })
 
     function updateValidity(){
-      var valid = isValidBid($("#new_num").val(), $("#new_rank").val(), 
-                             $("#old_num").val(), $("#old_rank").val());
+      var valid = validFuncs[selectedRule]($("#new_num").val(), $("#new_rank").val(), 
+                                           $("#old_num").val(), $("#old_rank").val());
 
       if (valid) {
         $(".answer").html("YES!")
@@ -71,13 +86,36 @@
       }
     }
 
-    function isValidBid(new_num, new_rank, old_num, old_rank) {
+    function isValidPirates(new_num, new_rank, old_num, old_rank) {
       if (new_num > Math.max(old_num, old_rank) ||
           new_rank > Math.max(old_num, old_rank)) {
         return true;
       } else {
         return false
       }
+    }
+
+    function isValidBlurb(new_num, new_rank, old_num, old_rank) {
+      if (new_num >= Math.max(old_num, old_rank) ||
+          new_rank >= Math.max(old_num, old_rank) &&
+          !((new_num == old_num) && (new_rank == old_rank))) {
+        return true;
+      } else {
+        return false
+      }
+    }
+
+    var validFuncs = {'#pirates': isValidPirates, '#blurb': isValidBlurb}
+    var selectedRule = '#pirates'
+
+    function selectRule(id) {
+      var rules = ['#pirates', '#blurb']
+      rules.map(function (r) {
+        $(r).removeClass('selected')
+      })
+      $(id).addClass('selected')
+
+      selectedRule = id
     }
   </script>
 
@@ -102,7 +140,7 @@
       <div class="answer"></div>
 
       <p>
-      Rule: <a href="http://en.wikipedia.org/wiki/Liar%27s_dice#Bidding_rules">"Pirates of the Carribean"</a>
+      Rule: <a id="pirates" href="#pirates" class="selected">Pirates</a> | <a id="blurb" href="#blurb">Blurb</a>
     </div>
   </body>
 </html>
